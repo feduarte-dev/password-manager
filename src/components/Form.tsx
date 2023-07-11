@@ -59,6 +59,11 @@ function Form({ formStatus, handleSubmit }: FormType) {
     handleSubmit(formValues);
     setFormValues(INITIAL_STATE);
   };
+  const [passType, setpassType] = useState('password');
+  function changePassType(e:any) {
+    e.preventDefault();
+    return passType === 'password' ? setpassType('text') : setpassType('password');
+  }
   return (
     <form onKeyUpCapture={ buttonEnable } onSubmit={ onSubmit }>
       <label>
@@ -84,7 +89,7 @@ function Form({ formStatus, handleSubmit }: FormType) {
       <label>
         Senha
         <input
-          type="password"
+          type={ passType }
           name="password"
           value={ password }
           onChange={ (e) => {
@@ -133,7 +138,13 @@ function Form({ formStatus, handleSubmit }: FormType) {
           onChange={ handleChange }
         />
       </label>
+      <button
+        data-testid="show-hide-form-password"
+        onClick={ (e) => changePassType(e) }
+      >
+        esconder/mostrar senha
 
+      </button>
       <button
         type="submit"
         disabled={ btnStatus }
