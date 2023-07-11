@@ -1,4 +1,7 @@
-function Form() {
+type FormType = {
+  formStatus: any
+};
+function Form({ formStatus }: FormType) {
   return (
     <form>
       <label>
@@ -22,7 +25,7 @@ function Form() {
       </label>
 
       <button>Cadastrar</button>
-      <button>Cancelar</button>
+      <button onClick={ () => formStatus() }>Cancelar</button>
     </form>
   );
 }
