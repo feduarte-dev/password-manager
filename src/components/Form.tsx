@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 type FormType = {
   formStatus: any,
@@ -39,7 +40,15 @@ function Form({ formStatus, handleSubmit }: FormType) {
       ? setBtnStatus(false)
       : setBtnStatus(true);
   }
-
+  function swalAlert() {
+    Swal.fire({
+      position: 'top-end',
+      icon: 'success',
+      title: 'Serviço cadastrado com sucesso',
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
   function lesserCharCheck() {
     return password.length > 7 ? setLesserChar(true) : setLesserChar(false);
   }
@@ -58,6 +67,7 @@ function Form({ formStatus, handleSubmit }: FormType) {
     formStatus();
     handleSubmit(formValues);
     setFormValues(INITIAL_STATE);
+    swalAlert();
   };
   const [passType, setpassType] = useState('password');
   function changePassType(e:any) {
