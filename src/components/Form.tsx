@@ -59,7 +59,6 @@ function Form({ formStatus, handleSubmit }: FormType) {
     setFormValues(INITIAL_STATE);
   };
   return (
-
     <form onKeyUpCapture={ buttonEnable } onSubmit={ onSubmit }>
       <label>
         Nome do serviço
@@ -138,11 +137,12 @@ function Form({ formStatus, handleSubmit }: FormType) {
         type="submit"
         disabled={ btnStatus }
         onClick={ () => formStatus() }
+
       >
         Cadastrar
 
       </button>
-      <button onClick={ () => formStatus() }>Cancelar</button>
+      <button type="button" onClick={ () => formStatus() }>Cancelar</button>
     </form>
   );
 }

@@ -20,7 +20,8 @@ function App() {
     console.log(productList);
   };
   return (
-    <>
+    <div>
+
       <Header />
       {showForm ? <Form
         formStatus={ () => formStatusFalse() }
@@ -34,10 +35,11 @@ function App() {
           <a href={ item.url }>{item.serviceName}</a>
           <p>{item.login}</p>
           <p>{item.password}</p>
+          <button data-testid="remove-btn">x</button>
         </div>
       ))}
-    </>
 
+    </div>
   );
 }
 
