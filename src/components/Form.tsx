@@ -55,6 +55,7 @@ function Form({ formStatus, handleSubmit }: FormType) {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    formStatus();
     handleSubmit(formValues);
     setFormValues(INITIAL_STATE);
   };
@@ -136,7 +137,6 @@ function Form({ formStatus, handleSubmit }: FormType) {
       <button
         type="submit"
         disabled={ btnStatus }
-        onClick={ () => formStatus() }
 
       >
         Cadastrar

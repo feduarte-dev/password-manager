@@ -17,9 +17,10 @@ function App() {
     ]);
     console.log(productList);
   };
-  function handleDelete(serviceName:string):void {
-    const newList = productList.filter((product) => product.serviceName !== serviceName);
+  function handleDelete(e:any):void {
+    const newList = productList.filter((product) => product.serviceName !== e.target.id);
     setproductList(newList);
+    console.log(e.target.id);
   }
   return (
     <div>
@@ -29,7 +30,7 @@ function App() {
         formStatus={ () => formStatus() }
         handleSubmit={ handleSubmit }
       />
-        : <button onClick={ () => formStatus() }>Cadastrar nova senha</button>}
+        : <button onClick={ formStatus }>Cadastrar nova senha</button>}
 
       {productList.length === 0 && <h2>Nenhuma senha cadastrada</h2>}
       {productList.map((item) => (
@@ -38,7 +39,8 @@ function App() {
           <p>{item.login}</p>
           <p>{item.password}</p>
           <button
-            // onClick={ ({ serviceName }) => handleDelete(serviceName) }
+            id={ item.serviceName }
+            onClick={ (e) => handleDelete(e) }
             data-testid="remove-btn"
           >
             x
