@@ -4,12 +4,12 @@ import Header from './components/Header';
 import Form from './components/Form';
 
 function App() {
-  const [showForm, setshowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   function formStatusTrue() {
-    setshowForm(true);
+    setShowForm(true);
   }
   function formStatusFalse() {
-    setshowForm(false);
+    setShowForm(false);
   }
   return (
     <>
@@ -23,3 +23,4 @@ function App() {
 
 export default App;
 // Corrigir o tipo do formStatus
+// Por que o onChange nao funcionou no buttonEnable do Form.tsx
