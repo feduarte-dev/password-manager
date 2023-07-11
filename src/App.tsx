@@ -6,12 +6,10 @@ import Form from './components/Form';
 function App() {
   const [productList, setproductList] = useState<any[]>([]);
   const [showForm, setShowForm] = useState(false);
-  function formStatusTrue() {
-    setShowForm(true);
+  function formStatus() {
+    return showForm ? setShowForm(false) : setShowForm(true);
   }
-  function formStatusFalse() {
-    setShowForm(false);
-  }
+
   const handleSubmit = (formValues: any): void => {
     setproductList([
       ...productList,
@@ -19,15 +17,19 @@ function App() {
     ]);
     console.log(productList);
   };
+  function handleDelete(serviceName:string):void {
+    const newList = productList.filter((product) => product.serviceName !== serviceName);
+    setproductList(newList);
+  }
   return (
     <div>
 
       <Header />
       {showForm ? <Form
-        formStatus={ () => formStatusFalse() }
+        formStatus={ () => formStatus() }
         handleSubmit={ handleSubmit }
       />
-        : <button onClick={ formStatusTrue }>Cadastrar nova senha</button>}
+        : <button onClick={ () => formStatus() }>Cadastrar nova senha</button>}
 
       {productList.length === 0 && <h2>Nenhuma senha cadastrada</h2>}
       {productList.map((item) => (
@@ -35,7 +37,13 @@ function App() {
           <a href={ item.url }>{item.serviceName}</a>
           <p>{item.login}</p>
           <p>{item.password}</p>
-          <button data-testid="remove-btn">x</button>
+          <button
+            // onClick={ ({ serviceName }) => handleDelete(serviceName) }
+            data-testid="remove-btn"
+          >
+            x
+
+          </button>
         </div>
       ))}
 
