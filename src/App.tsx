@@ -22,6 +22,11 @@ function App() {
     setproductList(newList);
     console.log(e.target.id);
   }
+  const [isChecked, setisChecked] = useState(false);
+  function checkChange() {
+    return isChecked ? setisChecked(false) : setisChecked(true);
+  }
+
   return (
     <div>
 
@@ -37,7 +42,8 @@ function App() {
         <div key={ item.serviceName }>
           <a href={ item.url }>{item.serviceName}</a>
           <p>{item.login}</p>
-          <p>{item.password}</p>
+          {isChecked ? <p>******</p> : <p>{item.password}</p>}
+
           <button
             id={ item.serviceName }
             onClick={ (e) => handleDelete(e) }
@@ -48,8 +54,17 @@ function App() {
           </button>
         </div>
       ))}
-
+      <label>
+        Esconder senhas
+        <input
+          type="checkbox"
+          name="showPass"
+          id="showPass"
+          onChange={ checkChange }
+        />
+      </label>
     </div>
+
   );
 }
 
