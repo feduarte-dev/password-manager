@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 type FormType = {
-  formStatus: any
+  formStatus: any,
+  handleSubmit: any
 };
 
 const INITIAL_STATE = {
@@ -10,7 +11,7 @@ const INITIAL_STATE = {
   password: '',
   url: '',
 };
-function Form({ formStatus }: FormType) {
+function Form({ formStatus, handleSubmit }: FormType) {
   const specialChars = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
   const [btnStatus, setBtnStatus] = useState(true);
   const [formValues, setFormValues] = useState(INITIAL_STATE);
@@ -52,9 +53,14 @@ function Form({ formStatus }: FormType) {
     return specialChars.test(password) ? setSpecialChar(true) : setSpecialChar(false);
   }
 
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSubmit(formValues);
+    setFormValues(INITIAL_STATE);
+  };
   return (
 
-    <form onKeyUpCapture={ buttonEnable }>
+    <form onKeyUpCapture={ buttonEnable } onSubmit={ onSubmit }>
       <label>
         Nome do serviço
         <input
@@ -128,7 +134,14 @@ function Form({ formStatus }: FormType) {
         />
       </label>
 
-      <button disabled={ btnStatus }>Cadastrar</button>
+      <button
+        type="submit"
+        disabled={ btnStatus }
+        onClick={ () => formStatus() }
+      >
+        Cadastrar
+
+      </button>
       <button onClick={ () => formStatus() }>Cancelar</button>
     </form>
   );
