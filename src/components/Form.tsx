@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
+import { FormStatusType } from '../types';
 
 type FormType = {
-  formStatus: any,
-  handleSubmit: any
+  formStatus: () => void,
+  handleSubmit: (formValues: FormStatusType) => void
 };
 
 const INITIAL_STATE = {
@@ -12,25 +13,30 @@ const INITIAL_STATE = {
   password: '',
   url: '',
 };
+
 function Form({ formStatus, handleSubmit }: FormType) {
+  const [formValues, setFormValues] = useState<FormStatusType>(INITIAL_STATE);
+  const [btnStatus, setBtnStatus] = useState<boolean>(true);
+  const [moreChar, setMoreChar] = useState<boolean>(true);
+  const [lesserChar, setLesserChar] = useState<boolean>(false);
+  const [letterNumber, setLetterNumber] = useState<boolean>(false);
+  const [specialChar, setSpecialChar] = useState<boolean>(false);
+  const [passType, setpassType] = useState<string>('password');
+
   const specialChars = /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
-  const [btnStatus, setBtnStatus] = useState(true);
-  const [formValues, setFormValues] = useState(INITIAL_STATE);
-  const { serviceName, login, password, url } = formValues;
-  const [lesserChar, setLesserChar] = useState(false);
-  const [moreChar, setMoreChar] = useState(true);
-  const [letterNumber, setLetterNumber] = useState(false);
-  const [specialChar, setSpecialChar] = useState(false);
   const valid = 'valid-password-check';
   const invalid = 'invalid-password-check';
-  function handleChange(event: React.ChangeEvent<HTMLInputElement
-  | HTMLSelectElement | HTMLTextAreaElement>) {
-    const { name, value } = event.target;
+
+  const { serviceName, login, password, url } = formValues;
+
+  function handleChange({ target }: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = target;
     setFormValues({
       ...formValues,
       [name]: value,
     });
   }
+
   function buttonEnable() {
     return serviceName.length > 0
     && login.length > 0
@@ -40,6 +46,7 @@ function Form({ formStatus, handleSubmit }: FormType) {
       ? setBtnStatus(false)
       : setBtnStatus(true);
   }
+
   function swalAlert() {
     Swal.fire({
       position: 'top-end',
@@ -49,6 +56,7 @@ function Form({ formStatus, handleSubmit }: FormType) {
       timer: 1500,
     });
   }
+
   function lesserCharCheck() {
     return password.length > 7 ? setLesserChar(true) : setLesserChar(false);
   }
@@ -62,6 +70,13 @@ function Form({ formStatus, handleSubmit }: FormType) {
     return specialChars.test(password) ? setSpecialChar(true) : setSpecialChar(false);
   }
 
+  function passCheck() {
+    lesserCharCheck();
+    moreCharCheck();
+    letterNumberCheck();
+    specialCharCheck();
+  }
+
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     formStatus();
@@ -69,13 +84,14 @@ function Form({ formStatus, handleSubmit }: FormType) {
     setFormValues(INITIAL_STATE);
     swalAlert();
   };
-  const [passType, setpassType] = useState('password');
-  function changePassType(e:any) {
-    e.preventDefault();
+
+  function changePassType(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    event.preventDefault();
     return passType === 'password' ? setpassType('text') : setpassType('password');
   }
+
   return (
-    <form onKeyUpCapture={ buttonEnable } onSubmit={ onSubmit }>
+    <form onChange={ buttonEnable } onSubmit={ onSubmit }>
       <label>
         Nome do serviço
         <input
@@ -102,43 +118,25 @@ function Form({ formStatus, handleSubmit }: FormType) {
           type={ passType }
           name="password"
           value={ password }
-          onChange={ (e) => {
-            handleChange(e);
-            lesserCharCheck(); moreCharCheck(); letterNumberCheck(); specialCharCheck();
-          } }
-
+          onChange={ (event) => { handleChange(event); passCheck(); } }
         />
       </label>
+
       <div>
-        <p
-          className={ lesserChar
-            ? valid : invalid }
-        >
+        <p className={ lesserChar ? valid : invalid }>
           Possuir 8 ou mais caracteres
-
         </p>
-        <p
-          className={ moreChar
-            ? valid : invalid }
-        >
+        <p className={ moreChar ? valid : invalid }>
           Possuir até 16 caracteres
-
         </p>
-        <p
-          className={ letterNumber
-            ? valid : invalid }
-        >
+        <p className={ letterNumber ? valid : invalid }>
           Possuir letras e números
-
         </p>
-        <p
-          className={ specialChar
-            ? valid : invalid }
-        >
+        <p className={ specialChar ? valid : invalid }>
           Possuir algum caractere especial
-
         </p>
       </div>
+
       <label>
         URL
         <input
@@ -148,22 +146,16 @@ function Form({ formStatus, handleSubmit }: FormType) {
           onChange={ handleChange }
         />
       </label>
+
       <button
         data-testid="show-hide-form-password"
-        onClick={ (e) => changePassType(e) }
+        onClick={ (event) => changePassType(event) }
       >
         esconder/mostrar senha
-
       </button>
-      <button
-        type="submit"
-        disabled={ btnStatus }
 
-      >
-        Cadastrar
-
-      </button>
-      <button type="button" onClick={ () => formStatus() }>Cancelar</button>
+      <button type="submit" disabled={ btnStatus }>Cadastrar</button>
+      <button type="button" onClick={ formStatus }>Cancelar</button>
     </form>
   );
 }
